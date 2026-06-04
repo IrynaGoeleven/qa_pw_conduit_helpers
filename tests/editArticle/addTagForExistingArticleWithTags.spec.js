@@ -1,35 +1,27 @@
 import { test } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { HomePage } from '../../src/ui/pages/HomePage';
 import { CreateArticlePage } from '../../src/ui/pages/article/CreateArticlePage';
 import { EditArticlePage } from '../../src/ui/pages/article/EditArticlePage';
 import { generateNewUserData } from '../../src/common/testData/generateNewUserData';
 import { generateNewArticleData } from '../../src/common/testData/generateNewArticleData';
 import { signUpUser } from '../../src/ui/actions/auth/signUpUser';
+import { createNewArticleWithTags } from '../../src/ui/actions/article/createNewArticle';
 import { ViewArticlePage } from '../../src/ui/pages/article/ViewArticlePage';
 
-let homePage;
 let createArticlePage;
 let viewArticlePage;
 let editArticlePage;
 let article;
 
 test.beforeEach(async ({ page }) => {
-  homePage = new HomePage(page);
   createArticlePage = new CreateArticlePage(page);
   viewArticlePage = new ViewArticlePage(page);
   editArticlePage = new EditArticlePage(page);
-  article = generateNewArticleData();
+  article = generateNewArticleData(1);
   const user = generateNewUserData();
 
   await signUpUser(page, user);
-  await homePage.clickNewArticleLink();
-
-  await createArticlePage.fillTitleField(article.title);
-  await createArticlePage.fillDescriptionField(article.description);
-  await createArticlePage.fillTextField(article.text);
-  await createArticlePage.fillTagField(faker.lorem.word());
-  await createArticlePage.clickPublishArticleButton();
+  await createNewArticleWithTags(page, article);
 });
 
 test('Add the tag for the existing article with tags', async () => {

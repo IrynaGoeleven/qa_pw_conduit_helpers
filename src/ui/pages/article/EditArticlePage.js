@@ -28,14 +28,15 @@ export class EditArticlePage {
   }
 
   async editArticleDescription(article) {
+    const description = article.description;
     await test.step(
-      `Edit article with description: ${article.description}`,
+      `Edit article with description: ${description}`,
       async () => {
-        await this.createArticlePage.fillDescriptionField(article.description);
-        await this.editArticleButton.clickEditArticleButton();
+        await this.createArticlePage.fillDescriptionField(description);
+        await this.clickEditArticleButton();
 
         await this.viewArticlePage.assertArticleDescriptionIsVisible(
-          article.description,
+          description,
         );
       },
     );
@@ -44,7 +45,7 @@ export class EditArticlePage {
   async editArticleText(article) {
     await test.step(`Edit article with text: ${article.text}`, async () => {
       await this.createArticlePage.fillTextField(article.text);
-      await this.editArticleButton.clickEditArticleButton();
+      await this.clickEditArticleButton();
 
       await this.viewArticlePage.assertArticleTextIsVisible(article.text);
     });

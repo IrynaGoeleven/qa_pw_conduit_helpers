@@ -1,37 +1,26 @@
 import { test } from '@playwright/test';
-import { faker } from '@faker-js/faker';
-import { HomePage } from '../../src/ui/pages/HomePage';
 import { CreateArticlePage } from '../../src/ui/pages/article/CreateArticlePage';
 import { EditArticlePage } from '../../src/ui/pages/article/EditArticlePage';
 import { generateNewUserData } from '../../src/common/testData/generateNewUserData';
 import { generateNewArticleData } from '../../src/common/testData/generateNewArticleData';
 import { signUpUser } from '../../src/ui/actions/auth/signUpUser';
+import { createNewArticleWithTags } from '../../src/ui/actions/article/createNewArticle';
 import { ViewArticlePage } from '../../src/ui/pages/article/ViewArticlePage';
 
-let homePage;
 let createArticlePage;
 let viewArticlePage;
 let editArticlePage;
 let article;
-let tag;
 
 test.beforeEach(async ({ page }) => {
-  homePage = new HomePage(page);
   createArticlePage = new CreateArticlePage(page);
   viewArticlePage = new ViewArticlePage(page);
   editArticlePage = new EditArticlePage(page);
-  article = generateNewArticleData();
+  article = generateNewArticleData(1);
   const user = generateNewUserData();
-  tag = faker.lorem.word();
 
   await signUpUser(page, user);
-  await homePage.clickNewArticleLink();
-
-  await createArticlePage.fillTitleField(article.title);
-  await createArticlePage.fillDescriptionField(article.description);
-  await createArticlePage.fillTextField(article.text);
-  await createArticlePage.fillTagField(tag);
-  await createArticlePage.clickPublishArticleButton();
+  await createNewArticleWithTags(page, article);
 });
 
 test('Remove an article tag for the existing article with tag', async () => {
@@ -40,5 +29,5 @@ test('Remove an article tag for the existing article with tag', async () => {
   await editArticlePage.clickEditArticleButton();
   await viewArticlePage.clickUserProfile();
 
-  await viewArticlePage.assertArticleTagIsNotVisible(tag);
+  await viewArticlePage.assertArticleTagIsNotVisible(article.tags[0]);
 });

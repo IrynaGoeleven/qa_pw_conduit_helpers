@@ -21,7 +21,7 @@ export class EditArticlePage {
   async editArticleTitle(article) {
     await test.step(`Edit article with title: ${article.title}`, async () => {
       await this.createArticlePage.fillTitleField(article.title);
-      await this.editArticleButton.clickEditArticleButton();
+      await this.clickEditArticleButton();
 
       await this.viewArticlePage.assertArticleTitleIsVisible(article.title);
     });
@@ -29,25 +29,21 @@ export class EditArticlePage {
 
   async editArticleDescription(article) {
     const description = article.description;
-    await test.step(
-      `Edit article with description: ${description}`,
-      async () => {
-        await this.createArticlePage.fillDescriptionField(description);
-        await this.clickEditArticleButton();
+    await test.step(`Edit article description: ${description}`, async () => {
+      await this.createArticlePage.fillDescriptionField(description);
+      await this.clickEditArticleButton();
 
-        await this.viewArticlePage.assertArticleDescriptionIsVisible(
-          description,
-        );
-      },
-    );
+      await this.viewArticlePage.assertArticleDescriptionIsVisible(description);
+    });
   }
 
   async editArticleText(article) {
-    await test.step(`Edit article with text: ${article.text}`, async () => {
-      await this.createArticlePage.fillTextField(article.text);
+    const text = article.text;
+    await test.step(`Edit article with text: ${text}`, async () => {
+      await this.createArticlePage.fillTextField(text);
       await this.clickEditArticleButton();
 
-      await this.viewArticlePage.assertArticleTextIsVisible(article.text);
+      await this.viewArticlePage.assertArticleTextIsVisible(text);
     });
   }
 }
